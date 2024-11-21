@@ -89,20 +89,39 @@ double compute_variance(const Matrix *matrix) {
     return variance / total_elements;
 }
 
+Matrix* transpose_matrix(const Matrix *matrix) {
+    int n = matrix->n;
+    Matrix *B_T = allocate_matrix(n);
+
+    #pragma omp parallel for
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
+            B_T->data[j][i] = matrix->data[i][j];
+        }
+    }
+
+    return B_T;
+}
+
 Matrix* multiply_matrices(const Matrix *A, const Matrix *B) {
     int n = A->n;
     Matrix *result = allocate_matrix(n);
+
+    // improve cache locality
+    Matrix *B_T = transpose_matrix(B);
 
     #pragma omp parallel for
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
             double sum = 0.0;
             for (int k = 0; k < n; ++k) {
-                sum += A->data[i][k] * B->data[k][j];
+                sum += A->data[i][k] * B_T->data[j][k];
             }
             result->data[i][j] = sum;
         }
     }
+
+    free_matrix(B_T);
 
     return result;
 }

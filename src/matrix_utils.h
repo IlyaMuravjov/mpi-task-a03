@@ -16,6 +16,7 @@ Matrix* read_matrix(const char *filename);
 int write_matrix(const char *filename, const Matrix *matrix);
 double compute_mean(const Matrix *matrix);
 double compute_variance(const Matrix *matrix);
+Matrix* transpose_matrix(const Matrix *matrix);
 Matrix* multiply_matrices(const Matrix *A, const Matrix *B);
 void add_scalar_to_diagonal(Matrix *matrix, double scalar);
 void add_scalar_to_all_elements(Matrix *matrix, double scalar);
