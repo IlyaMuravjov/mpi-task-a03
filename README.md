@@ -91,7 +91,7 @@ $\mathbf{A} = \mathbf{B}\ \mathbf{C}^2 + M(\mathbf{C})\ \mathbf{I} + \mathbf{I} 
 
 
     
-![png](experiment_files/experiment_14_0.png)
+![scalability](assets/scalability.png)
     
 
 
@@ -133,7 +133,7 @@ $\mathbf{A} = \mathbf{B}\ \mathbf{C}^2 + M(\mathbf{C})\ \mathbf{I} + \mathbf{I} 
 
 
     
-![png](experiment_files/experiment_19_0.png)
+![amdahl](assets/amdahl.png)
     
 
 
