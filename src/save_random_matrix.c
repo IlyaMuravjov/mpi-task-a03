@@ -22,16 +22,14 @@ int main(int argc, char *argv[]) {
 
     srand(seed);
 
-    Matrix *matrix = allocate_matrix(n);
+    Matrix *matrix = allocate_matrix(n, n);
 
-    for (int i = 0; i < n; ++i) {
-        for (int j = 0; j < n; ++j) {
-            double r = ((double)rand() / RAND_MAX);
-            matrix->data[i][j] = min_value + r * (max_value - min_value);
-        }
+    for (int i = 0; i < n * n; ++i) {
+        double r = ((double)rand() / RAND_MAX);
+        matrix->data[i] = min_value + r * (max_value - min_value);
     }
 
-    write_matrix(output_filename, matrix);
+    write_square_matrix(output_filename, matrix);
 
     free_matrix(matrix);
 

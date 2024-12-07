@@ -1,5 +1,5 @@
-CC = gcc
-CFLAGS = -O3 -fopenmp
+CC = mpicc
+CFLAGS = -O3
 
 all: main save_random_matrix
 
