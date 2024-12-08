@@ -33,7 +33,11 @@ Matrix* read_square_matrix(const char *filename) {
         for (int j = 0; j < size; ++j) {
             double value;
             if (fscanf(fp, "%lf", &value) == EOF) {
-                fprintf(stderr, "Failed to read matrix element at pos (%d, %d)", i, j);
+                fprintf(
+                    stderr,
+                    "Failed to read matrix element at pos (%d, %d)",
+                    i, j
+                );
                 MPI_Abort(MPI_COMM_WORLD, 1);
             }
             matrix_set(matrix, i, j, value);
@@ -90,7 +94,9 @@ Matrix* transpose_matrix(const Matrix *matrix) {
     return B_T;
 }
 
-Matrix* multiply_by_transposed(const Matrix *A, const Matrix *B_transposed) {
+Matrix* multiply_by_transposed(
+    const Matrix *A, const Matrix *B_transposed
+) {
     assert(A->ncols == B_transposed->ncols);
     Matrix *result = allocate_matrix(A->nrows, B_transposed->nrows);
 
@@ -98,7 +104,8 @@ Matrix* multiply_by_transposed(const Matrix *A, const Matrix *B_transposed) {
         for (int j = 0; j < B_transposed->nrows; j++) {
             double sum = 0.0;
             for (int k = 0; k < A->ncols; k++) {
-                sum += matrix_get(A, i, k) * matrix_get(B_transposed, j, k);
+                sum += matrix_get(A, i, k) 
+                    * matrix_get(B_transposed, j, k);
             }
             matrix_set(result, i, j, sum);
         }
@@ -120,7 +127,9 @@ void add_scalar_to_all_elements(Matrix *matrix, double scalar) {
     }
 }
 
-void calculate_counts_and_displacements(int global_nrows, int ncols, int size, int **counts, int **displs) {
+void calculate_counts_and_displacements(
+    int global_nrows, int ncols, int size, int **counts, int **displs
+) {
     *counts = (int *) malloc(size * sizeof(int));
     *displs = (int *) malloc(size * sizeof(int));
     int base_rows = global_nrows / size;
@@ -128,7 +137,8 @@ void calculate_counts_and_displacements(int global_nrows, int ncols, int size, i
     int offset = 0;
 
     for (int i = 0; i < size; ++i) {
-        (*counts)[i] = (i < remainder ? base_rows + 1 : base_rows) * ncols;
+        (*counts)[i] = (i < remainder ? base_rows + 1 : base_rows) 
+                          * ncols;
         (*displs)[i] = offset;
         offset += (*counts)[i];
     }
@@ -154,7 +164,9 @@ Matrix* scatter_rows(Matrix *matrix, MPI_Comm comm, int root) {
 
     int *counts = NULL, *displs = NULL;
     if (rank == root) {
-        calculate_counts_and_displacements(global_nrows, ncols, size, &counts, &displs);
+        calculate_counts_and_displacements(
+            global_nrows, ncols, size, &counts, &displs
+        );
     }
 
     MPI_Scatterv(
@@ -177,7 +189,9 @@ Matrix* scatter_rows(Matrix *matrix, MPI_Comm comm, int root) {
     return local_matrix;
 }
 
-Matrix* gather_rows(Matrix *local_matrix, MPI_Comm comm, int root, int global_nrows) {
+Matrix* gather_rows(
+    Matrix *local_matrix, MPI_Comm comm, int root, int global_nrows
+) {
     int rank, size, ncols;
     MPI_Comm_rank(comm, &rank);
     MPI_Comm_size(comm, &size);
@@ -186,7 +200,9 @@ Matrix* gather_rows(Matrix *local_matrix, MPI_Comm comm, int root, int global_nr
 
     int *counts = NULL, *displs = NULL;
     if (rank == root) {
-        calculate_counts_and_displacements(global_nrows, ncols, size, &counts, &displs);
+        calculate_counts_and_displacements(
+            global_nrows, ncols, size, &counts, &displs
+        );
     }
 
     Matrix *global_matrix = NULL;

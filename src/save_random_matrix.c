@@ -5,7 +5,8 @@
 
 void print_help() {
     printf("Saves random N-by-N matrix\n"
-           "Usage: ./save_random_matrix <output_matrix_file> <N> <min_value> <max_value> <seed>\n");
+           "Usage: ./save_random_matrix <output_matrix_file> <N> "
+           "<min_value> <max_value> <seed>\n");
 }
 
 int main(int argc, char *argv[]) {
@@ -26,7 +27,8 @@ int main(int argc, char *argv[]) {
 
     for (int i = 0; i < n * n; ++i) {
         double r = ((double)rand() / RAND_MAX);
-        matrix->data[i] = min_value + r * (max_value - min_value);
+        matrix->data[i] = min_value 
+            + r * (max_value - min_value);
     }
 
     write_square_matrix(output_filename, matrix);

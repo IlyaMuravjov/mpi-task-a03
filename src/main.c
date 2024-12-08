@@ -5,11 +5,15 @@
 #include "matrix_utils.h"
 
 void print_help() {
-    printf("Computes and saves A = B * C^2 + M(C) * I + I + D(B) * E\n"
-        "Usage: ./main <B_matrix_file> <C_matrix_file> <output_A_matrix_file>\n"
-        "Matrix file for N-by-N matrix should be in the following format:\n"
+    printf("Computes and saves "
+        "A = B * C^2 + M(C) * I + I + D(B) * E\n"
+        "Usage: ./main <B_matrix_file> <C_matrix_file> "
+        "<output_A_matrix_file>\n"
+        "Matrix file for N-by-N matrix should be in the "
+        "following format:\n"
         "First line: N\n"
-        "Next N lines: each line contains N space-separated double values\n");
+        "Next N lines: each line contains N space-separated "
+        "double values\n");
 }
 
 int main(int argc, char *argv[]) {
@@ -49,7 +53,6 @@ int main(int argc, char *argv[]) {
     }
 
     double start_time = 0.0;
-    double t0 = 0.0;
     if (rank == 0) {
         start_time = MPI_Wtime();
         
@@ -65,11 +68,19 @@ int main(int argc, char *argv[]) {
         C_transposed = allocate_matrix(n, n);
     }
 
-    MPI_Bcast(C_transposed->data, n*n, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+    MPI_Bcast(
+        C_transposed->data, n*n, MPI_DOUBLE,
+        0, MPI_COMM_WORLD
+    );
 
     Matrix *B_local = scatter_rows(B, MPI_COMM_WORLD, 0);
-    Matrix *BC_local = multiply_by_transposed(B_local, C_transposed);
-    Matrix *BCC_local = multiply_by_transposed(BC_local, C_transposed);
+
+    Matrix *BC_local = 
+        multiply_by_transposed(B_local, C_transposed);
+
+    Matrix *BCC_local = 
+        multiply_by_transposed(BC_local, C_transposed);
+
     Matrix *result = gather_rows(BCC_local, MPI_COMM_WORLD, 0, n);
 
     if (rank == 0) {
